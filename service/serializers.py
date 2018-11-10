@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from .models import (Salon, User, Service, Profile, Master, Order)
 
 class UserCreateSerializers(serializers.ModelSerializer):
@@ -65,9 +66,11 @@ class OrderSerializers(serializers.ModelSerializer):
         model = Order
         fields = ('id', 'user', 'master', 'create_at', 'state', 'type', 'date', 'time')
 
+
 class OrderPostSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Order
         fields = ('master', 'date', 'time')
+
 

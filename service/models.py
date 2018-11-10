@@ -163,7 +163,7 @@ class Order(models.Model):
         (3, 'Отменен')
     )
     user = models.ForeignKey(User, verbose_name=u'Пользователь', on_delete=models.CASCADE)
-    master = models.OneToOneField(Master, on_delete=models.CASCADE)
+    master = models.ForeignKey(Master, on_delete=models.CASCADE)
     create_at = models.DateField(verbose_name='Дата создания', auto_now_add=True)
     state = models.IntegerField(verbose_name='Статус', choices=STATUS, default=1)
     type = models.IntegerField(verbose_name='Тип заказа', choices=TYPE, default=1)

@@ -109,14 +109,18 @@ class OrderView(APIView):
 
     def post(self, request):
 
+        # if request.user.type != 2:
+        #     return Response({'message': 'not allowed'})
+
+        print(request.data)
+
         order = OrderPostSerializers(data = request.data)
         
-        print('------\n'+str(order)+'\n-----------')
         if order.is_valid():
             order.save(user = request.user)
             return Response({'status': 'added new order'})
         else:
-            return Response({'status': 'Error'})
+            return Response({'status': order.errors})
 
 class OrderDetailView(APIView):
 
