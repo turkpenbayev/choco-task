@@ -49,7 +49,7 @@ class UserAdmin(UserAdmin):
 
 
     list_display = ('email', 'type', 'is_admin',)
-    list_filter = ('is_admin',)
+    list_filter = ('is_admin','type')
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
@@ -75,5 +75,7 @@ admin.site.register (User, UserAdmin)
 admin.site.register(Salon, SalonAdmin)
 admin.site.register(Service)
 admin.site.register(Master)
+admin.site.register(Profile)
+admin.site.register(Order)
 
 admin.site.unregister(Group)

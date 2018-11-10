@@ -109,7 +109,6 @@ class Service(models.Model):
     def __str__(self):
         return self.name
 
-
 class Salon(models.Model):
 
     class Meta:
@@ -131,10 +130,47 @@ class Master(models.Model):
         verbose_name_plural = u'Мастеры'
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    salon  = models.ForeignKey(Salon, on_delete=models.CASCADE, verbose_name = u'Салон')
     service = models.ForeignKey(Service, on_delete=models.CASCADE, verbose_name = u'Услуга')
+    
+    def __str__(self):
+        return ('%s-%s'%(self.user.profile, self.salon))
+
+
+class Order(models.Model):
+
+    class Meta:
+        verbose_name = u'Заказ'
+        verbose_name_plural = u'Заказы'
+
+    STATUS = (
+        (1, 'Не подтвержден'),
+        (2, 'Подтвержден')
+    )
+    TYPE = (
+        (1, 'Новый заказ'),
+        (2, 'Услуга оказан'),
+        (3, 'Отменен')
+    )
+    user = models.ForeignKey(User, verbose_name=u'Пользователь', on_delete=models.CASCADE)
+    master = models.OneToOneField(Master, on_delete=models.CASCADE)
+    create_at = models.DateField(verbose_name='Дата создания', auto_now_add=True)
+    state = models.IntegerField(verbose_name='Статус', choices=STATUS, default=1)
+    type = models.IntegerField(verbose_name='Тип платежа', choices=TYPE, default=1)
+    date = models.DateField(verbose_name=u'Дата')
+    time = models.TimeField(verbose_name=u'Время')
+
 
     def __str__(self):
-        return self.user.profile
+        return ('%s-%s'%(self.user.profile, self.master.service))
+
+
+
+
+
+
+
+
     
 
 
