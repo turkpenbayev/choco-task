@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
@@ -102,9 +103,10 @@ class ServiceAndTime(APIView):
 
     def get(self, request):
 
-        service = request.data['service']
+        service = request.GET['service']
 
-        salons = Master.objects.filter()
+        salons = Salon.objects.filter(Q(master__service = service))
+
         serializer = SalonSerializers(salons, many = True)
         return Response({'data': serializer.data})
 
