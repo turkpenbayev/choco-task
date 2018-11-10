@@ -5,6 +5,15 @@ from django.db import models
 
 # Create your models here.
 
+class IntegerRangeField(models.IntegerField):
+    def __init__(self, verbose_name=None, name=None, min_value=None, max_value=None, **kwargs):
+        self.min_value, self.max_value = min_value, max_value
+        models.IntegerField.__init__(self, verbose_name, name, **kwargs)
+    def formfield(self, **kwargs):
+        defaults = {'min_value': self.min_value, 'max_value':self.max_value}
+        defaults.update(kwargs)
+        return super(IntegerRangeField, self).formfield(**defaults)
+
 class UserManager(BaseUserManager):
     """
 
@@ -131,10 +140,12 @@ class Master(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     salon  = models.ForeignKey(Salon, on_delete=models.CASCADE, verbose_name = u'Салон')
-    service = models.ForeignKey(Service, on_delete=models.CASCADE, verbose_name = u'Услуга')
+    service = models.ManyToManyField(Service, verbose_name = u'Услуга')
+    expirence = models.IntegerField(default=0, verbose_name='Опыт работы')
+    rating = IntegerRangeField(min_value=0, max_value=100, verbose_name='Рейтинг')
     
     def __str__(self):
-        return ('%s-%s'%(self.user.profile, self.salon))
+        return ('%s-%s'%(self.user, self.salon))
 
 
 class Order(models.Model):
