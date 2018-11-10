@@ -126,7 +126,6 @@ class Salon(models.Model):
 
     name = models.CharField(max_length=64, verbose_name='Имя')
     address = models.CharField(max_length=128, verbose_name='Адресс')
-    service = models.ManyToManyField(Service, verbose_name = 'Услуга')
 
     def __str__(self):
         return self.name

@@ -27,11 +27,9 @@ class ServiceSerializers(serializers.ModelSerializer):
 
 class SalonSerializers(serializers.ModelSerializer):
 
-    service = ServiceSerializers(many = True)
-
     class Meta:
         model = Salon
-        fields = ('id', 'name', 'address', 'service')
+        fields = ('id', 'name', 'address')
 
 
 class UserSerializers(serializers.ModelSerializer):
