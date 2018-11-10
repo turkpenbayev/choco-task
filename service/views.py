@@ -118,6 +118,16 @@ class OrderView(APIView):
         else:
             return Response({'status': 'Error'})
 
+class OrderDetailView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, pk):
+        order = Order.objects.get(pk=pk)
+        serializer = OrderSerializers(order)
+        return Response({'data': serializer.data})
+
+
 
 
 class ServiceAndTime(APIView):

@@ -63,7 +63,7 @@ class OrderSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ('user', 'master', 'create_at', 'state', 'type', 'date', 'time')
+        fields = ('id', 'user', 'master', 'create_at', 'state', 'type', 'date', 'time')
 
 class OrderPostSerializers(serializers.ModelSerializer):
 
