@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from .models import User, Salon
+from .models import *
 from django.contrib.auth.models import Group
 
 # Register your models here.
@@ -73,4 +73,7 @@ class SalonAdmin(admin.ModelAdmin):
 
 admin.site.register (User, UserAdmin)
 admin.site.register(Salon, SalonAdmin)
+admin.site.register(Service)
+admin.site.register(Master)
+
 admin.site.unregister(Group)

@@ -87,7 +87,13 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(verbose_name='Имя', max_length=64)
     last_name = models.CharField(verbose_name='Фамилия', max_length=64)
+    phone = models.CharField(verbose_name='Номер тел', max_length=14, default = '87000000000')
 
+    def send_sms():
+        return true
+
+    def __str__(self):
+        return ('%s %s'%(self.last_name, self.name))
 
 
 class Service(models.Model):
@@ -100,16 +106,8 @@ class Service(models.Model):
     name = models.CharField(max_length = 64, verbose_name = 'Имя')
     detail = models.TextField(max_length=512, verbose_name='Подробне')
 
-
-class Master(models.Model):
-
-    class Meta:
-        verbose_name = u'Мастер'
-        verbose_name_plural = u'Мастеры'
-
-
-    name = models.CharField(max_length = 64, verbose_name = 'Имя')
-    detail = models.TextField(max_length=512, verbose_name='Подробне')
+    def __str__(self):
+        return self.name
 
 
 class Salon(models.Model):
@@ -119,4 +117,31 @@ class Salon(models.Model):
         verbose_name_plural = u'Салоны'
 
     name = models.CharField(max_length=64, verbose_name='Имя')
-    address = models.CharField(max_length=128, verbose_name='Адресс') 
+    address = models.CharField(max_length=128, verbose_name='Адресс')
+    service = models.ManyToManyField(Service, verbose_name = 'Услуга')
+
+    def __str__(self):
+        return self.name
+
+
+class Master(models.Model):
+
+    class Meta:
+        verbose_name = u'Мастер'
+        verbose_name_plural = u'Мастеры'
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, verbose_name = u'Услуга')
+
+    def __str__(self):
+        return self.user.profile
+    
+
+
+
+
+
+    
+
+
+
