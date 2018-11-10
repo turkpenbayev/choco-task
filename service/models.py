@@ -171,7 +171,6 @@ class Order(models.Model):
     date = models.DateField(verbose_name=u'Дата')
     time = models.TimeField(verbose_name=u'Время')
 
-
     def __str__(self):
         return ('%s-%s'%(self.user.profile, self.master.service))
 
