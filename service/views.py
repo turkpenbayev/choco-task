@@ -6,10 +6,10 @@ from rest_framework import permissions
 
 from .models import *
 from .serializers import (SalonSerializers, ServiceSerializers, UserCreateSerializers, 
-UserSerializers, ProfileSerializers)
+UserSerializers, ProfileSerializers, MasterSerializers)
 
 # Create your views here.
-class SalonsView(APIView):
+class SalonView(APIView):
     
     permission_classes = [permissions.IsAuthenticated]
 
@@ -19,7 +19,7 @@ class SalonsView(APIView):
         serializer = SalonSerializers(salon, many = True)
         return Response({'data': serializer.data})
 
-class CreateUsersView(CreateAPIView):
+class CreateUserView(CreateAPIView):
 
     permission_classes = [permissions.AllowAny]
     
@@ -27,7 +27,7 @@ class CreateUsersView(CreateAPIView):
     serializer_class = UserCreateSerializers
 
 
-class UsersView(APIView):
+class UserView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
@@ -37,7 +37,7 @@ class UsersView(APIView):
 
         return Response({'data': serializer.data})
 
-class ServicesView(APIView):
+class ServiceView(APIView):
     
     permission_classes = [permissions.IsAuthenticated]
 
@@ -47,10 +47,10 @@ class ServicesView(APIView):
         return Response({'data': serializer.data})
 
 
-class ProfilesView(APIView):
+class ProfileView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
-    
+
 
     def get(self, request):
         profile = Profile.objects.get(user = request.user)
@@ -74,4 +74,37 @@ class ProfilesView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MasterView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        master = Master.objects.all()
+        serializer = MasterSerializers(master, many = True)
+        return Response({'data': serializer.data})
+
+
+class MasterDetailView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, pk):
+        master = Master.objects.get(pk=pk)
+        serializer = MasterSerializers(master)
+        return Response({'data': serializer.data})
+
+
+class ServiceAndTime(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+
+        service = request.data['service']
+
+        salons = Master.objects.filter()
+        serializer = SalonSerializers(salons, many = True)
+        return Response({'data': serializer.data})
 

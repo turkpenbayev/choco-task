@@ -141,7 +141,7 @@ class Master(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     salon  = models.ForeignKey(Salon, on_delete=models.CASCADE, verbose_name = u'Салон')
     service = models.ManyToManyField(Service, verbose_name = u'Услуга')
-    expirence = models.IntegerField(default=0, verbose_name='Опыт работы')
+    experience = models.IntegerField(default=0, verbose_name='Опыт работы')
     rating = IntegerRangeField(min_value=0, max_value=100, verbose_name='Рейтинг')
     
     def __str__(self):

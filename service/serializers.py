@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Salon, User, Service, Profile
+from .models import (Salon, User, Service, Profile, Master)
 
 class UserCreateSerializers(serializers.ModelSerializer):
 
@@ -46,6 +46,16 @@ class ProfileSerializers(serializers.ModelSerializer):
         model = Profile
         fields = ('name', 'last_name', 'phone')
 
+
+class MasterSerializers(serializers.ModelSerializer):
+
+    name = serializers.CharField(source = 'user.profile')
+    service = ServiceSerializers(many = True)
+    salon = SalonSerializers()
+
+    class Meta:
+        model = Master
+        fields = ('id', 'name', 'salon', 'service', 'experience', 'rating')
 
 
     
