@@ -103,7 +103,7 @@ class OrderView(APIView):
 
     def get(self, request):
 
-        order = Order.objects.filter()
+        order = Order.objects.all()
         serializer = OrderSerializers(order, many = True)
         return Response({'data': serializer.data})
 
@@ -131,6 +131,19 @@ class OrderDetailView(APIView):
         serializer = OrderSerializers(order)
         return Response({'data': serializer.data})
 
+class MastersOrderView(APIView):
+
+    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+
+        if request.user.type == 1:
+            return Response({'error': 'You are not allowed'})
+
+        orders = Order.objects.filter(Q(state = 1) & Q(master = request.user.master))
+        serializer = OrderSerializers(orders, many = True)
+        return Response({'data': serializer.data})
 
 
 

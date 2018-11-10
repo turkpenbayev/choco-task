@@ -102,7 +102,7 @@ class Profile(models.Model):
         return true
 
     def __str__(self):
-        return ('%s %s'%(self.last_name, self.name))
+        return ('%s %s'%(self.user.email, self.name))
 
 
 class Service(models.Model):
@@ -175,6 +175,13 @@ class Order(models.Model):
         return ('%s-%s'%(self.user.profile, self.master.service))
 
 
+class Comments(models.Model):
+    master = models.ForeignKey(Master, on_delete=models.CASCADE)
+    name = models.CharField(verbose_name=u'Пользователь', max_length = 64)
+    content = models.TextField(max_length=200)
+
+    def __str__(self):
+        return 'From %s'%(name)
 
 
 
