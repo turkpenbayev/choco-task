@@ -7,7 +7,7 @@ from rest_framework import permissions
 
 from .models import *
 from .serializers import (SalonSerializers, ServiceSerializers, UserCreateSerializers, 
-UserSerializers, ProfileSerializers, MasterSerializers)
+UserSerializers, ProfileSerializers, MasterSerializers, OrderSerializers, OrderPostSerializers)
 
 # Create your views here.
 class SalonView(APIView):
@@ -95,6 +95,29 @@ class MasterDetailView(APIView):
         master = Master.objects.get(pk=pk)
         serializer = MasterSerializers(master)
         return Response({'data': serializer.data})
+
+
+class OrderView(APIView):
+    
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+
+        order = Order.objects.filter()
+        serializer = OrderSerializers(order, many = True)
+        return Response({'data': serializer.data})
+
+    def post(self, request):
+
+        order = OrderPostSerializers(data = request.data)
+        
+        print('------\n'+str(order)+'\n-----------')
+        if order.is_valid():
+            order.save(user = request.user)
+            return Response({'status': 'added new order'})
+        else:
+            return Response({'status': 'Error'})
+
 
 
 class ServiceAndTime(APIView):

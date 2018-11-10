@@ -166,7 +166,7 @@ class Order(models.Model):
     master = models.OneToOneField(Master, on_delete=models.CASCADE)
     create_at = models.DateField(verbose_name='Дата создания', auto_now_add=True)
     state = models.IntegerField(verbose_name='Статус', choices=STATUS, default=1)
-    type = models.IntegerField(verbose_name='Тип платежа', choices=TYPE, default=1)
+    type = models.IntegerField(verbose_name='Тип заказа', choices=TYPE, default=1)
     date = models.DateField(verbose_name=u'Дата')
     time = models.TimeField(verbose_name=u'Время')
 

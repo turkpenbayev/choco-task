@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import (Salon, User, Service, Profile, Master)
+from .models import (Salon, User, Service, Profile, Master, Order)
 
 class UserCreateSerializers(serializers.ModelSerializer):
 
@@ -56,4 +56,18 @@ class MasterSerializers(serializers.ModelSerializer):
         fields = ('id', 'name', 'salon', 'service', 'experience', 'rating')
 
 
-    
+
+class OrderSerializers(serializers.ModelSerializer):
+
+    user = UserSerializers()
+
+    class Meta:
+        model = Order
+        fields = ('user', 'master', 'create_at', 'state', 'type', 'date', 'time')
+
+class OrderPostSerializers(serializers.ModelSerializer):
+
+    class Meta:
+        model = Order
+        fields = ('master', 'date', 'time')
+
