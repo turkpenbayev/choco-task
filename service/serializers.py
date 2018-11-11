@@ -49,12 +49,13 @@ class ProfileSerializers(serializers.ModelSerializer):
 class MasterSerializers(serializers.ModelSerializer):
 
     name = serializers.CharField(source = 'user.profile.name')
+    email = serializers.EmailField(source = 'user.email')
     service = ServiceSerializers(many = True)
     salon = SalonSerializers()
 
     class Meta:
         model = Master
-        fields = ('id', 'name', 'salon', 'service', 'experience', 'rating')
+        fields = ('id', 'name', 'email', 'salon', 'service', 'experience', 'rating')
 
 
 

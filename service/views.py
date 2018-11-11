@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from django.shortcuts import get_object_or_404
 
+from .tasks import notify_user
 from .models import *
 from .serializers import (SalonSerializers, ServiceSerializers, UserCreateSerializers, 
         UserSerializers, ProfileSerializers, MasterSerializers, OrderSerializers, OrderPostSerializers,
@@ -129,7 +130,8 @@ class OrderView(APIView):
                 sbj = 'New order'
                 msg = 'New order from user: %s'%(user)
                 
-                master.user.email_user(sbj, msg)
+                # master.user.email_user(sbj, msg)
+                notify_user.delay(sbj, msg, master.user.email)
                 return Response({'status': 'added new order', 'message': 'Master%s notified'%(master)})
 
             return Response({'status': 'added new order', 
@@ -151,7 +153,8 @@ class OrderView(APIView):
             sbj = 'Order canceled'
             msg = 'Order canceled from user: %s'%(request.user)
             
-            master.user.email_user(sbj, msg)
+            # master.user.email_user(sbj, msg)
+            notify_user.delay(sbj, msg, master.user.email)
             return Response({'status': 'order canceled', 'message': 'Master: %s notified'%(master)})
         else:
             return Response(order.errors)
@@ -178,7 +181,7 @@ class MastersOrderView(APIView):
         if request.user.type == 1:
             return Response({'error': 'You are not allowed'})
 
-        orders = Order.objects.filter(Q(state = 1) & Q(master = request.user.master))
+        orders = Order.objects.filter(Q(state = 2) & Q(master = request.user.master) & ~Q(type=3))
         serializer = OrderSerializers(orders, many = True)
         return Response({'data': serializer.data})
 
