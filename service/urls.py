@@ -1,14 +1,15 @@
 from django.urls import path
 from .views import (SalonView, CreateUserView, UserView, ServiceView,
         ProfileView, MasterView, MasterDetailView, ServiceAndTime, OrderView, 
-        OrderDetailView, MastersOrderView, ServiceAndSalon, VerifyPhone)
+        OrderDetailView, MastersOrderView, ServiceAndSalon, VerifyPhone, UsersOrderView)
 
 urlpatterns = [
     path('register/', CreateUserView.as_view()),
     path('profile/', ProfileView.as_view()),
-    
+
     path('users/', UserView.as_view()),
     path('users/verify/', VerifyPhone.as_view()),
+    path('users/orders/', UsersOrderView.as_view()),
 
     path('salons/', SalonView.as_view()),
     path('services/', ServiceView.as_view()),

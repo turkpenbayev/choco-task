@@ -41,6 +41,7 @@ class UserView(APIView):
 
         return Response({'data': serializer.data})
 
+
 class ServiceView(APIView):
     
     permission_classes = [permissions.IsAuthenticated]
@@ -170,6 +171,19 @@ class OrderDetailView(APIView):
         order = Order.objects.get(pk=pk)
         serializer = OrderSerializers(order)
         return Response({'data': serializer.data})
+
+
+class UsersOrderView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+
+
+        orders = Order.objects.filter(Q(state = 2) & Q(user = request.user) & ~Q(type=3))
+        serializer = OrderSerializers(orders, many = True)
+        return Response({'data': serializer.data})
+
+
 
 class MastersOrderView(APIView):
 
