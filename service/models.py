@@ -73,9 +73,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         send_mail(subject, message, EMAIL_HOST_USER, [self.email], fail_silently=True, **kwargs)
         return self.email
 
-    def send_sms(self, code):
-        sendSms(phone = self.profile.phone, message = code)
-        return code
+    def send_sms(self):
+        msg = 'Код для подтверждение: %s'%(self.profile.verify_code)
+        sendSms(phone = self.profile.phone, message = msg)
+        return msg
+
+    def is_verified(self):
+        return self.profile.is_verified
 
     def __str__(self):
         return self.email
@@ -106,9 +110,9 @@ class Profile(models.Model):
     name = models.CharField(verbose_name='Имя', max_length=64)
     last_name = models.CharField(verbose_name='Фамилия', max_length=64)
     phone = models.CharField(verbose_name='Номер тел', max_length=14, default = '87000000000')
-
-    def send_sms():
-        return true
+    is_verified = models.BooleanField(verbose_name='Номер подтвержден', default=False)
+    verify_code = models.CharField(verbose_name = 'Код', max_length = 4)
+    
 
     def __str__(self):
         return ('%s %s'%(self.user.email, self.name))

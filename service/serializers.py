@@ -74,3 +74,12 @@ class OrderPostSerializers(serializers.ModelSerializer):
         fields = ('master', 'date', 'time')
 
 
+class OrderCancelSerializers(serializers.ModelSerializer):
+
+    id = serializers.IntegerField()
+
+    class Meta:
+        model = Order
+        fields = ('id',)
+
+
