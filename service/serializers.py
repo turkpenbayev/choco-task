@@ -48,7 +48,7 @@ class ProfileSerializers(serializers.ModelSerializer):
 
 class MasterSerializers(serializers.ModelSerializer):
 
-    name = serializers.CharField(source = 'user.profile')
+    name = serializers.CharField(source = 'user.profile.name')
     service = ServiceSerializers(many = True)
     salon = SalonSerializers()
 

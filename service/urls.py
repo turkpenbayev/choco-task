@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (SalonView, CreateUserView, UserView, ServiceView,
         ProfileView, MasterView, MasterDetailView, ServiceAndTime, OrderView, 
-        OrderDetailView, MastersOrderView)
+        OrderDetailView, MastersOrderView, ServiceAndSalon)
 
 urlpatterns = [
     path('register/', CreateUserView.as_view()),
@@ -12,8 +12,10 @@ urlpatterns = [
     path('masters/', MasterView.as_view()),
     path('masters/<int:pk>/', MasterDetailView.as_view()),
     path('masters/orders/', MastersOrderView.as_view()),
-    path('service/time/', ServiceAndTime.as_view()),
+    
     path('orders/', OrderView.as_view()),
-    path('orders/<int:pk>/', OrderDetailView.as_view())
+    path('orders/<int:pk>/', OrderDetailView.as_view()),
 
+    path('service/time/', ServiceAndTime.as_view()),
+    path('service/salon/', ServiceAndSalon.as_view()),
 ]

@@ -160,3 +160,20 @@ class ServiceAndTime(APIView):
         serializer = SalonSerializers(salons, many = True)
         return Response({'data': serializer.data})
 
+
+class ServiceAndSalon(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+
+        service = request.GET['service']
+        salon = request.GET['salon']
+
+        # salons = Salon.objects.filter(Q(master__service = service))
+
+        masters = Master.objects.filter(Q(salon__id = salon) & Q(service__id = service))
+
+        serializer = MasterSerializers(masters, many = True)
+        return Response({'data': serializer.data})
+
