@@ -149,3 +149,12 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_WHITELIST = 'http://localhost:8080'
+
+SMS_LOGIN = 'sms@choco.kz'
+SMS_PASSWORD = 'passwordchoco'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'test@gmail.com'
+EMAIL_HOST_PASSWORD = 'test_password'
+EMAIL_PORT = 587

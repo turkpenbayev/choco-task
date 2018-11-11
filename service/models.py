@@ -3,6 +3,10 @@ from django.contrib.auth.models import (AbstractBaseUser, AbstractUser,
                                         User, UserManager)
 from django.db import models
 
+from .utils.sms_api import sendSms
+from django.core.mail import send_mail
+from choco.settings import EMAIL_HOST_USER
+
 # Create your models here.
 
 class IntegerRangeField(models.IntegerField):
@@ -67,6 +71,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, EMAIL_HOST_USER, [self.email], fail_silently=True, **kwargs)
+        return self.email
+
+    def send_sms(self, code):
+        sendSms(phone = self.profile.phone, message = code)
+        return code
 
     def __str__(self):
         return self.email
