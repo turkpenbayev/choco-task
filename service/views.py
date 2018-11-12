@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.db.models import Q
+from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework import permissions
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .tasks import notify_user
 from .models import *
@@ -44,7 +46,7 @@ class UserView(APIView):
 
 class ServiceView(APIView):
     
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         service = Service.objects.all()
@@ -81,14 +83,30 @@ class ProfileView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class MasterView(APIView):
+# class MasterView(APIView):
 
-    permission_classes = [permissions.IsAuthenticated]
+#     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        master = Master.objects.all()
-        serializer = MasterSerializers(master, many = True)
-        return Response({'data': serializer.data})
+#     def get(self, request):
+#         master = Master.objects.all()
+#         serializer = MasterSerializers(master, many = True)
+#         return Response({'data': serializer.data})
+class MasterView(generics.ListAPIView):
+
+    permission_classes = [permissions.AllowAny]
+
+    queryset = Master.objects.all()
+    serializer_class = MasterSerializers
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ('id', 'service',)
+
+    def get_queryset(self):
+        date = self.request.query_params.get('date')
+        if date:
+            masters = Master.objects.filter(~Q(order__date = date) & ~Q(order__state__in = [1,3]) & ~Q(order__type=2))
+            
+            return  masters# returned queryset filtered by date
+        return Master.objects.all() 
 
 
 class MasterDetailView(APIView):
