@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+import datetime
 
 from .tasks import notify_user
 from .models import *
@@ -91,6 +92,7 @@ class ProfileView(APIView):
 #         master = Master.objects.all()
 #         serializer = MasterSerializers(master, many = True)
 #         return Response({'data': serializer.data})
+
 class MasterView(generics.ListAPIView):
 
     permission_classes = [permissions.AllowAny]
@@ -98,15 +100,15 @@ class MasterView(generics.ListAPIView):
     queryset = Master.objects.all()
     serializer_class = MasterSerializers
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ('id', 'service',)
+    filter_fields = ('id', 'service', 'salon')
 
     def get_queryset(self):
         date = self.request.query_params.get('date')
-        if date:
-            masters = Master.objects.filter(~Q(order__date = date) & ~Q(order__state__in = [1,3]) & ~Q(order__type=2))
-            
+        time = self.request.query_params.get('time')
+        if date and time:
+            masters = Master.objects.filter(~Q(order__date = date) | ~Q(order__time = time))
             return  masters# returned queryset filtered by date
-        return Master.objects.all() 
+        return Master.objects.all()
 
 
 class MasterDetailView(APIView):
@@ -140,12 +142,24 @@ class OrderView(APIView):
         user = request.user
         
         if order.is_valid():
-            order.save(user = user)
+
+            master = order.validated_data['master']
+            date = order.validated_data['date']
+            time = order.validated_data['time']
+      
+            check_order = Order.objects.filter(Q(master=master) & Q(date = date) & Q(time = time))
+
+            if len(check_order) > 0:
+                return Response({'error': 'Master have order for that time',
+                            'order_id': check_order.first().pk})
+
+            
+            order.save(user = user)   
 
             if user.is_verified():
                 order.save(state=2)
-                master = Master.objects.get(pk = order.data['master'])
-
+                         
+                
                 sbj = 'New order'
                 msg = 'New order from user: %s'%(user)
                 
