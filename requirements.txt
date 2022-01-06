@@ -22,7 +22,7 @@ bokeh==0.12.16
 boto==2.48.0
 Bottleneck==1.2.1
 cached-property==1.4.3
-celery==4.2.1
+celery==5.2.2
 certifi==2018.4.16
 cffi==1.11.5
 chardet==3.0.4
